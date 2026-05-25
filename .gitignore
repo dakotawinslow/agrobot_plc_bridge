@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+
+# Colcon / ROS2 workspace artifacts (live outside the package, but just in case)
+build/
+install/
+log/
+
+# OPC UA client certificates (auto-generated, contain private key)
+# Default location: ~/.config/agrobot_plc_bridge/certs/
+# Nothing in this repo should reference certs, but belt-and-suspenders:
+*.der
+*.pem
+
+# Editor
+.vscode/
+*.swp
+*~
+
+# NOTE: config/plc_bridge.yaml contains bench credentials (admin/botbotbot).
+# These are acceptable for development but must be replaced with a secrets
+# manager or environment variables before field/production deployment.
