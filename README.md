@@ -37,19 +37,33 @@ as ROS2 services and panel buttons as outgoing ROS2 service calls.
 # Create workspace
 mkdir -p ~/opcua_ws/src && cd ~/opcua_ws
 
-# Clone both packages
+# Clone packages
 git clone https://github.com/dakotawinslow/agrobot_plc_bridge_msgs src/agrobot_plc_bridge_msgs
 git clone https://github.com/dakotawinslow/agrobot_plc_bridge      src/agrobot_plc_bridge
+
+# Optional — demo node (lights/buttons showcase):
+git clone https://github.com/dakotawinslow/agrobot_plc_bridge_demo src/agrobot_plc_bridge_demo
 
 # Python venv with system-site-packages so rclpy is visible
 uv venv --system-site-packages   # or: python3 -m venv --system-site-packages .venv
 source .venv/bin/activate
 uv pip install asyncua            # or: pip install asyncua
 
-# Build
-colcon build
+# Copy the workspace build helper (patches entry-point shebangs to use the venv)
+cp src/agrobot_plc_bridge/build.sh .
+
+# Build (use build.sh instead of colcon build — see note below)
+./build.sh
 source install/setup.bash
 ```
+
+> **Why `build.sh` instead of `colcon build`?**
+> colcon's `ament_python` task always generates entry-point scripts with
+> `#!/usr/bin/python3`, even when a venv is active.  `build.sh` runs
+> `colcon build` and then rewrites those shebangs to point at the project
+> venv, so that `ros2 run` and `ros2 launch` find `asyncua` without
+> installing it system-wide.  It forwards any extra flags to colcon, so
+> `./build.sh --packages-select agrobot_plc_bridge` works as expected.
 
 ## Configuration
 
